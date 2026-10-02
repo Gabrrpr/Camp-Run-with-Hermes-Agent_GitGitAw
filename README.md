@@ -93,6 +93,26 @@ hermes mcp test suki
 
 Then ask Hermes: *"Use the suki MCP server to describe the Suki Mart sandbox."*
 
+### Included sample implementation: Suki PromiseGuard
+
+This repo now includes a full delivery-recovery workflow sample:
+
+- MCP tools in `mcp-server/server.py`:
+  - `find_recovery_cases`
+  - `prepare_recovery_plan`
+  - `publish_recovery_card`
+  - `apply_recovery_action`
+  - `get_recovery_result`
+- Skill in `skills/suki-team-skill/SKILL.md`
+- Desktop pane actions in `desktop-plugin/suki-panel/plugin.js`
+- Tests in `tests/test_promiseguard.py`
+
+Run verification:
+
+```bash
+venv/Scripts/python.exe -m unittest discover -s tests -v
+```
+
 > **Alternative to step 3** — add it to `~/.hermes/config.yaml` yourself:
 > ```yaml
 > mcp_servers:

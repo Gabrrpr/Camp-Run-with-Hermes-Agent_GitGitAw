@@ -1,52 +1,52 @@
 ---
-name: suki-team-skill
-description: >-
-  TEMPLATE — replace this line. One or two sentences telling Hermes WHEN to use
-  this skill, e.g. "Use when a Suki Mart branch manager asks for a morning
-  restock brief or which products to transfer between branches."
+name: suki-promiseguard-recovery
+description: Recover delivery-related customer complaints with evidence-backed actions and promise safety checks.
 ---
 
-# Suki Team Skill (template)
-
-> **LAYER 2 — SKILL (the playbook).** A skill is a markdown procedure Hermes
-> loads on demand. It teaches the agent *how* to chain your MCP tools into a
-> real multi-step workflow. Rename the folder and the `name:` field to your
-> team's skill name (lowercase, hyphens) — they must match.
+# Suki PromiseGuard recovery workflow
 
 ## When to use this skill
 
-- Trigger phrases or situations, e.g. "morning brief", "what should I restock",
-  "which customers should we win back".
-- Who is asking (branch manager? CSR lead? ops head?) and what they need.
+Use this when operations or customer support asks which delivery complaints should be recovered first, and how to respond without making unsupported promises.
 
 ## Tools this skill uses
 
-List the MCP tools from **your** server (they appear to Hermes as
-`mcp_<server>_<tool>`), and what each one is for in this workflow:
-
-1. `mcp_suki_describe_sandbox` — only if the data model is unclear.
-2. `mcp_suki_<your_tool>` — ...
-3. `mcp_suki_<your_tool>` — ...
+1. `mcp_suki_find_recovery_cases` — shortlist and rank open/pending delivery cases.
+2. `mcp_suki_prepare_recovery_plan` — gather evidence, propose safe action, and run Promise Check.
+3. `mcp_suki_publish_recovery_card` — render GUI-ready evidence card payload.
+4. `mcp_suki_apply_recovery_action` — apply approved assignment/escalation transaction.
+5. `mcp_suki_get_recovery_result` — read back persisted change + audit trail.
 
 ## Procedure
 
-1. Clarify the scope if missing (which branch? what date range?). The sandbox's
-   "today" is **2026-09-30** — use it for "this week", "last 30 days", etc.
-2. Call `<tool>` to gather ...
-3. Call `<tool>` to check ...
-4. Decide / rank / recommend using these rules: ...
-5. (Optional) Take an action with a write tool, and confirm with the user first.
+1. Call `find_recovery_cases` with branch (default `Cubao`) and bounded limit.
+2. Prioritize by urgency (priority), unanswered status, and age.
+3. For chosen ticket, call `prepare_recovery_plan` and inspect:
+   - what happened,
+   - ticket → order → delivery evidence,
+   - uncertainties,
+   - Promise Check safe vs blocked items.
+4. Call `publish_recovery_card` for a compact evidence card.
+5. Ask approval before mutation.
+6. On approval, call `apply_recovery_action(ticket_id, owner_id, plan_token_value)`.
+7. Immediately call `get_recovery_result(action_id)` (or use returned result) and present verified before/after state.
 
 ## Output format
 
-Describe exactly how the answer should look, e.g.:
-
-- A one-line headline with the single most important finding.
-- A table: `branch | product | on hand | days of cover | suggested action`.
-- Max 3 recommended next actions, each with a reason from the data.
+- Headline with one top case recommendation.
+- Evidence card with Promise Check.
+- Verified result card must include:
+  - previous/current owner and status,
+  - action ID,
+  - response draft,
+  - “Draft only—not sent”,
+  - “Assigned—not resolved”.
 
 ## Pitfalls
 
-- Things the agent should NOT do (e.g. don't recommend reordering an item that
-  already has a pending purchase order).
-- Data quirks your team discovered (duplicates, missing values, ...).
+- Treat staffing gaps as context, not proven causality.
+- Never invent ETA, refund authorization, or delivery outcome.
+- Exclude or flag invalid chronology (ticket before order).
+- Require approval before write.
+- Duplicate approvals must return existing action result, not create duplicates.
+- If plan is stale, refresh plan before re-applying.
